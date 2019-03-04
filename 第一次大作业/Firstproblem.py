@@ -30,9 +30,11 @@ def bintodeci(str):
             else :
                 return "wrong input!"
         return res
+
+
 # 十进制转二进制
 
-def decitobin(str):
+def decitobin(string):
     p=False
     while p == False:
         digits = input ("How many digits of fraction part do you want to display? :\n")    # 确定显示位数
@@ -41,9 +43,35 @@ def decitobin(str):
         except ValueError as e:
             print ("Warrning"+e)
             continue
-        if 
-    pass # TODO: this function is not finished
-
+        if digits > 0 :
+            p = True
+    (pre_part,_,post_part)=string.partition(".")
+    integer=""
+    decimal=""
+    if _ == '.': #输入中存在小数点
+        # 整数部分不停除二取余
+        pre=int(pre_part)
+        while pre != 0:
+            re = str(pre%2)
+            integer =integer+ re
+            pre = pre//2
+        #小数部分不停乘二取整
+        post=float("0"+_+post_part)
+        while post != 0 and len(decimal) < digits :
+            re = str(int(post*2))
+            decimal = decimal+ re
+            post = (post*2)%1 # 取小数位
+        if len(decimal)<digits: # 补齐小数位
+            decimal = decimal + '0'*(digits-len(decimal))
+    elif _ == "": # 输入中不存在小数点
+        # 整数部分不停除二取余
+        pre=int(pre_part)
+        while pre != 0:
+            re = str(pre%2)
+            integer =integer+ re
+            pre = pre//2
+    result = integer+_+decimal
+    return result
 
 if __name__=='__main__':
     end =False
@@ -57,6 +85,8 @@ if __name__=='__main__':
             num =input("please input your number:")
             print(decitobin(num))
             print("=================")
+        elif a.lower() == "exit":
+            break
         else :
             print("please try again!")
             continue

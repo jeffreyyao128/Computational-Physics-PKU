@@ -5,15 +5,21 @@
 题目所给条件为自然边界条件
 '''
 
+import matplotlib.pyplot as plt
+import numpy as np
+
 x0 = [0,3,5,7,9,11,12,13,14,15] # 函数的定义域为[0,15]
 y0=[0,1.2,1.7,2.0,2.1,2.0,1.8,1.2,1.0,1.6] 
 n =len(x0)
+<<<<<<< HEAD
 
 def d(i):
     return (y0[i]-y0[i+1])/(x0[i]-x0[i+1])
 
 def h(i):
     return (x0[i+1]-x0[i])
+=======
+>>>>>>> origin/Branch
 
 def firstorder(x,y):
     '''
@@ -29,12 +35,12 @@ def firstorder(x,y):
     
     return m
 
-def f(x,x0,y0,m):
+def f(x,m):
     '''
     返回三次样条内插函数值
     '''
     if x < x0[0] and x>x0[n-1]:
-        raise ValueError('You x value is out of range!!')
+        raise ValueError('Your x value is out of range!!')
     for i in range(1,n):
         if x < x0[i] and x > x0[i-1]:
             h = x[i]-x[i-1]
@@ -46,5 +52,8 @@ def f(x,x0,y0,m):
             x2*x1**2*m[i]/h**2)
 
 if __name__=='__main__':
-    m = firstorder(x0,y0)
-
+    # m = firstorder(x0,y0)
+    # 下面是画图部分
+    x1 = np.linspace(0,15,100) # 在定义域中共100个点
+    y1 = np.array([x **2 for x in np.nditer(x1)])
+    

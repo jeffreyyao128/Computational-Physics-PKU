@@ -7,15 +7,27 @@
 
 x0 = [0,3,5,7,9,11,12,13,14,15] # 函数的定义域为[0,15]
 y0=[0,1.2,1.7,2.0,2.1,2.0,1.8,1.2,1.0,1.6] 
-n =len(x)
+n =len(x0)
+
+def d(i):
+    return (y0[i]-y0[i+1])/(x0[i]-x0[i+1])
+
+def h(i):
+    return (x0[i+1]-x0[i])
 
 def firstorder(x,y):
     '''
     返回插值中n个点的一阶导数m_i
     采用三转角方程求解一阶导数
     '''
+    # 建立矩阵
+    mu=[h(i)/(h(i)+h(i+1)) for i in range(n-1)]
+    lamb=[h(i+1)/(h(i)+h(i+1)) for i in range(n-1)]
+    # 建立待解向量
+    b = [3*d[0]]+[3*(lamb[i]*d(i)+mu(i)*d(i+1)) for i in range(n-1)]+[3*d[n-1]]
 
-    pass
+    
+    return m
 
 def f(x,x0,y0,m):
     '''

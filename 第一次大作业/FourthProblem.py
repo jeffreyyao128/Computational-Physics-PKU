@@ -11,15 +11,13 @@ import numpy as np
 x0 = [0,3,5,7,9,11,12,13,14,15] # 函数的定义域为[0,15]
 y0=[0,1.2,1.7,2.0,2.1,2.0,1.8,1.2,1.0,1.6] 
 n =len(x0)
-<<<<<<< HEAD
 
 def d(i):
     return (y0[i]-y0[i+1])/(x0[i]-x0[i+1])
 
 def h(i):
     return (x0[i+1]-x0[i])
-=======
->>>>>>> origin/Branch
+
 
 def firstorder(x,y):
     '''

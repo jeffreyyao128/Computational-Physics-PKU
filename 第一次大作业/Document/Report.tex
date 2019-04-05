@@ -1,0 +1,57 @@
+\documentclass{ctexart}
+
+\usepackage{fancyhdr}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{amsmath}
+
+% Codes settings
+\lstset{
+	language=Python,
+	numbers = left,
+	numberstyle = \tiny,
+	basicstyle = \small,
+	keywordstyle = \color{blue!70}\bfseries,
+	stringstyle = \color{red},
+	commentstyle =\color[rgb]{0.6,.6,.6}\itshape,
+	identifierstyle={},
+	frame = shadowbox,
+	rulesepcolor= \color{ red!20!green!20!blue!20},
+	escapeinside=``
+}
+\pagestyle{fancy}
+\rfoot{\thepage}
+\cfoot{}
+\lfoot{\itshape Jeffreyyao@pku.edu.cn}
+
+\title{计算物理大作业}
+\author{姚铭星}
+\date{1700011321}
+ 		
+\begin{document}
+\maketitle
+\thispagestyle{fancy}
+\section{第一题}
+\subsection{思路}
+\section{第二题：高斯求积}
+\subsection{思路}
+具有如下形式的积分问题可以用高斯求积来解决：
+$$\int_{a}^{b} w(x)f(x)dx$$
+解决高斯求积问题的关键是找到一组在该权函数下的正交基。
+在定义内积
+\[ (f,g)=\int_{a}^{b} w(x)f(x)g(x)dx \]
+的前提下，权重以及正交基满足下列关系:
+\begin{align*}
+p_{-1}(x)&=0\\
+p_0 (x)&=1\\
+p_{j+1}(x)&=(x-a_j)p_{j}(x)-b_jp_{j-1}(x)
+\end{align*}
+其中：
+\begin{align*}
+a_j&=\frac{(xp_j,p_j)}{(p_j,p_j)}\\
+b_j&=\frac{(p_{j},p_{j})}{(p_{j-1},p_{j-1})}
+\end{align*}
+设$x_{\mu}$是正交多项式$p_N(x)$的第$\mu$个根，则系数满足：
+\[w_j=\frac{(p_{N-1}(x),p_{N-1}(x))}{p_{N-1}(x_j)p'_{N}(x_j)}\]
+
+\end{document}

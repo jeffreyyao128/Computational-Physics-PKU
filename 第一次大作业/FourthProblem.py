@@ -70,9 +70,11 @@ def f(x,m):
 if __name__=='__main__':
     m = firstorder(x0,y0)
     # 下面是画图部分
-    x1 = np.linspace(x[0],x[n],1000) # 在定义域中共100个点
+    x1 = np.linspace(x0[0],x0[n],1000) # 在定义域中共100个点
     y1 = np.array([f(x,m)for x in np.nditer(x1)])
-    plt.plot(x1,y1,'r--')
-    plt.scatter(x0,y0)
+    plt.plot(x1,y1,'r--',label='Cubic spline interpolation')
+    plt.plot(x0,y0,'go',label='Raw data')
+    plt.legend()
+    plt.title('Cubic Spline Method')
     plt.show()
     

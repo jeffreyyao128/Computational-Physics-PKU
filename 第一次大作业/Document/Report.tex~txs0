@@ -156,98 +156,10 @@ def decay(ta,tb,dt,tmax=1):
 	\includegraphics[width=8cm]{./fig/Figure_6.png}
 	\caption{长期衰变}
 \end{figure}
-也可以看出，去除最开始的那段短程过程有些许不同之外，在最后都会趋于零。
+也可以看出，去除最开始的那段短程过程有些许不同之外，在最后都会趋于零
 \subsubsection{误差}
 对于每一次计算，可以利用泰勒展开估计误差
-$$N((i+1)\Delta t)=N(i\Delta t) + N'(i\Delta t)\cdot\Delta t + \frac{1}{2}N^{(2)}(\xi)\Delta t^2$$
-在忽略机器精度的情况下，绝对误差可以估计为一个上界：
-$$\Delta(t)\leq\frac{1}{2}\frac{\Delta t\cdot t}{\tau^2}$$
-等号当且仅当在$t=0$时成立。
-
-下面是实际的情况（绝对误差随时间的变化）,可以看出，在尺度上而言，的确是与$\Delta t$的取值成正比
-\begin{figure}
-	\centering
-	\includegraphics[width=8cm]{./fig/Error.png}
-	\caption{误差随时间的变化}
-\end{figure}
-
-\newpage
-\section{第四题：三次样条差值}
-\subsection{问题描述}
-对于飞机机翼的轮廓每隔$0.1 m $的值，利用自然边界条件，使用三次样条插值估计任意一点的$y$值，需要与原始数据点一同绘制出飞机的轮廓曲线。
-\begin{table}[htb]
-	$$
-	\begin{array}{c|cccccccccc}
-	\hline x & {0} & {3} & {5} & {7} & {9} & {11} & {12} & {13} & {14} & {15} \\ \hline y & {0} & {1.2} & {1.7} & {2.0} & {2.1} & {2.0} & {1.8} & {1.2} & {1.0} & {1.6} \\ 
-	\hline
-	\end{array}
-	$$
-\end{table}
-\subsection{三次样条插值}
-三次样条差值也是多项式插值的一种。相比于拉格朗日插值和牛顿插值等多项式插值，三次样条方法拥有更加高阶的导数连续性。具体来说，三次样条方法不仅要求在插值点上有连续的函数值，而且还要求有连续的一阶以及二阶导数值。即因满足条件：
-$$
-\left\{\begin{array}{l}{S\left(x_{i}-0\right)=S\left(x_{i}+0\right)} \\ {S^{\prime}\left(x_{i}-0\right)=S^{\prime}\left(x_{i}+0\right), \quad i=1,2, \cdots, n-1} \\ {S^{\prime \prime}\left(x_{i}-0\right)=S^{\prime \prime}\left(x_{i}+0\right)}\end{array}\right.
-$$
-
-在每一个区间$x \in\left[x_{k}, x_{k+1}\right]$内部使用三次函数差值。
-
-类似于Hermite插值法，使用分段Hermite多项式，此时零阶和一阶条件自动满足：
-
-$$
-H_{3}^{(k)}(x)=y_{k} \alpha_{0}^{(k)}(x)+y_{k+1} \alpha_{1}^{(k)}(x)+y_{k}^{\prime} \beta_{0}^{(k)}(x)+y_{k+1}^{\prime} \beta_{1}^{(k)}(x)
-$$
-
-取用各节点的一阶导数为未知数$S^{\prime}\left(x_{i}\right)=m_{i}$，利用二阶导数条件：
-$$
-\mu_{i} m_{i+1}+2 m_{i}+\lambda_{i} m_{i-1}=e_{i}, \quad i=1,2, \cdots, n-1
-$$
-其中$ \mu_{j} =\frac{h_{j-1}}{h_{j-1}+h_{j}}, \quad \lambda_{j}=\frac{h_{j}}{h_{j-1}+h_{j}}, e_{i} =3\left(\lambda_{i} f\left[x_{i-1}, x_{i}\right]+\mu_{i} f\left[x_{i}, x_{i+1}\right]\right)$
-
-并且使用自然边界条件：
-\[S''(0) = S''(x_{n-1}) = 0\]
-
-这样问题变为求解三对角矩阵方程解问题，可以利用追赶法快速求解。
-\subsection{实现}
-\begin{lstlisting}
-def firstorder(x,y):
-	'''
-	返回插值中n个点的一阶导数m_i
-	采用三转角方程求解一阶导数
-	'''
-	# 建立矩阵
-	mu=[h(i-1)/(h(i)+h(i-1)) for i in range(1,n)]
-	lamb=[h(i)/(h(i)+h(i-1)) for i in range(1,n)]
-	# 建立待解向量
-	b = [3*d(0)]+[3*(lamb[i-1]*d(i-1)+mu[i-1]*d(i))\# 写不下换行
-		for i in range(1,n)]+[3*d(n-1)]
-	mu = [1] + mu
-	lamb = lamb +[1]
-	dia = [2 for _ in range(n+1)]
-	# 开始追赶法求解三对角矩阵
-	for i in range(1,n+1):
-		lamb[i-1] = lamb[i-1]/dia[i-1]
-		dia[i] = dia[i] - mu[i-1]* lamb[i-1]
-		b[i] -= b[i-1]*lamb[i-1]
-		m = [-1 for _ in range(n+1)]
-	m[n] = b[n]/dia[n]
-	for i in range(n-1,-1,-1):
-		m[i] = (b[i] - mu[i]*m[i+1])/dia[i]
-	return m
-\end{lstlisting}
-\newpage
-\subsection{结果分析}
-可以看出，函数的光滑性是很好的。
-\begin{figure}[hbt]
-	\centering
-	\includegraphics[width=12cm]{./fig/Cubic_spline.png}
-\end{figure}
-
-\section{第五题：求解对称带状正定矩阵}
-\subsection{题目描述}
-对于带宽为$2m+1$的对称正定带状矩阵$\mathbf{A}$,可以分解为$\mathbf{A}=\mathbf{L} \mathbf{D} \mathbf{L}^{T}$。结果可以用于求解一般的对称正定带状线性方程组$\mathbf{A x}=\mathbf{b}$。
-
-题目中给定的对称带状矩阵$\mathbf{A}$,$m=2$,非零元素为$a_{11}=a_{n n}=5 ; \quad a_{i i}=6(i=2, \ldots, n-1) ; \quad a_{i, i-1}=4(i=2, \ldots, n) ; a_{i, i-2}=1(i=3, \ldots, n)$，右端向量为$\mathbf{b}=(60,120, \dots, 120,60)^{T}$。给出$n=100$和$n=10000$两个算例。
-
-\subsection{算法描述}
-
+$$N((i+1)\Delta t)=N((i)\Delta t) + N'((i)\Delta t)\cdot\Delta t + \frac{1}{2}N^{(2)}(\xi)\Delta t^2$$
+误差可以估计为：
+$$$$
 \end{document}

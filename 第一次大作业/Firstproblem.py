@@ -3,90 +3,77 @@
 相互转换，并列举足够算例说明你程序的正确性。
 '''
 
-# 首先实现二进制转十进制
+import numpy as np # 用于判断符号位
+import math as ms # 用于计算对数和向下取整
 
-def bintodeci(str):
-    (pre_part,_,post_part)=str.partition(".") # 将数从小数点分成三个部分
-    res = 0
-    if _ == '.':        # 输入中存在小数点
-        for index in range(len(pre_part)): # 整数部分
-            a = int(pre_part[-index-1]) # 倒着排
-            if a in [1,0]:
-                res += a * (2 ** index)
-            else :
-                return "wrong input!"
-        for index in range(len(post_part)): # 小数部分
-            a = int(post_part[index])
-            if a in [1,0]:
-                res += a * (2 ** (-index -1))
-            else :
-                return "wrong input!"
-        return res
-    elif _ == '' : # 不存在小数点
-        for index in range(len(pre_part)): # 整数部分
-            a = int(pre_part[-index-1]) # 倒着排
-            if a in [1,0]:
-                res += a * (2 ** index)
-            else :
-                return "wrong input!"
-        return res
+# 首先实现二进制转十进制
+def bi2deci(a):
+    '''
+    实现double型二进制数转十进制 
+    输入为a[64]数据类型为<class ='list'>
+    输出为float(python默认为double)
+    '''
+    sign = -1 if a[0]==1 else 1 #符号位
+    E = 0# 指数位
+    for i in range(1,12):
+        E += 2**(11-i)*a[i]
+    # print(E)
+    T = 1# 尾数位
+    for i in range(12,64):
+        T += a[i]*2**(11-i)
+    # print(T)
+    x = sign * T * 2**(E - 1023)
+    if x < 2**(-1022):
+        return 0
+    return x
 
 
 # 十进制转二进制
 
-def decitobin(string):
-    p=False
-    while p == False:
-        digits = input ("How many digits of fraction part do you want to display? :\n")    # 确定显示位数
-        try:
-            digits = int(digits)
-        except ValueError as e:
-            print ("Warrning"+e)
-            continue
-        if digits > 0 :
-            p = True
-    (pre_part,_,post_part)=string.partition(".")
-    integer=""
-    decimal=""
-    if _ == '.': #输入中存在小数点
-        # 整数部分不停除二取余
-        pre=int(pre_part)
-        while pre != 0:
-            re = str(pre%2)
-            integer =integer+ re
-            pre = pre//2
-        #小数部分不停乘二取整
-        post=float("0"+_+post_part)
-        while post != 0 and len(decimal) < digits :
-            re = str(int(post*2))
-            decimal = decimal+ re
-            post = (post*2)%1 # 取小数位
-        if len(decimal)<digits: # 补齐小数位
-            decimal = decimal + '0'*(digits-len(decimal))
-    elif _ == "": # 输入中不存在小数点
-        # 整数部分不停除二取余
-        pre=int(pre_part)
-        while pre != 0:
-            re = str(pre%2)
-            integer =integer+ re
-            pre = pre//2
-    result = integer+_+decimal
-    return result
+def deci2bi(a):
+    '''
+    实现double(float)型十进制数转二进制
+    返回res[64]
+    a[0]为符号,a[1:12]为指数位,a[12:64]为小数位
+    '''
+    S = np.sign(a)
+    res = [0 for i in range(64)]
+    if S ==0:
+        return res
+    S = 0 if np.sign(a)==1 else 1
+    res[0] = int(S)
+    a = abs(a)
+    E = ms.floor(ms.log2(a))
+    if a >=2:
+        # 符号位> 1023
+        while a>=2 :
+            a/=2
+            # E+=1
+    elif a<1:
+        while a <1:
+            a*=2
+            # E-=1
+    # 此时 a \in (1,2]
+    a -= 1 #去掉首位的1
+    # print("E = "+str(E))
+    E +=1023 #加上偏移量
+    for k in range(11,0,-1): #计算指数位
+        res[k] =int(E %2.0)
+        E /=2.0
+        if E==0:
+            break
+    p = 1
+    while p<=52:
+        a *=2
+        h = 1 if a>=1.0 else 0
+        res[11+p] = h
+        a -=h
+        p+= 1
+    return res
 
 if __name__=='__main__':
-    end =False
-    while end != True:
-        a=input("Binary or Decimal?: Bin/Deci \n")
-        if a.lower() == 'bin':
-            num =input ("please input your number:")
-            print(bintodeci(num))
-            print("=================")
-        elif a.lower() == 'deci':
-            num =input("please input your number:")
-            print(decitobin(num))
-            print("=================")
-        elif a.lower() == "exit":
-            break
-        else :
-            print("please try again!")
-            continue
+    p=(deci2bi(0.5))
+    for i in p:
+        print(i,end='')
+    print()
+    print(bi2deci(p))

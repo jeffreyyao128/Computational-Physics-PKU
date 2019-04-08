@@ -2,49 +2,82 @@
 正定带状矩阵进行Chelosky分解，要求时空复杂度做到最小
 '''
 # 矩阵半带宽为2
-from numpy import *
-from math import *
+import numpy as np  # 调用numpy仅在validation函数中用作检验
+import math 用于开根号计算
+import matplotlib.pyplot as plt # 用作绘图
 
-n = 100 # 矩阵大小
+n = 10000 # 矩阵大小
 m = 2 # 带宽
 
 # 利用三个向量存储矩阵
 
-def solve(a,b):
-    for i in range(n): # 下三角前代过程
-        b[i] -= sum([a[i-j][j]*b[j] for j in range(max(0,i-m),i)])
-        b[i] /= a[0][i]
-    for x in range(n-1,-1,-1):
-        b[i] -= sum([a[j-i][i]*b[j] for j in range(i+1,min(n,i+m))])
-        b[i] /= a[0][i]
-    return b
-
 def validation(n, b):
-  A = diag([5]+([6]*(n-2))+[5])
-  A += diag([4]*(n-1), k=1)
-  A += diag([4]*(n-1), k=-1)
-  A += diag([1]*(n-2), k=2)
-  A += diag([1]*(n-2), k=-2)
-  return A.dot(asarray(b))
+    '''
+    验证解，调用numpy矩阵运算
+    '''
+    A = np.diag([5]+([6]*(n-2))+[5])
+    A += np.diag([4]*(n-1), k=1)
+    A += np.diag([4]*(n-1), k=-1)
+    A += np.diag([1]*(n-2), k=2)
+    A += np.diag([1]*(n-2), k=-2)
+    return A.dot(np.asarray(b))
+
+# def NeoCholesky(a,b):
+#     '''
+#     Cholesky 分解，返回解向量
+#     '''
+#     for i in range(n):
+#         for j in range(max(0,i-m),i+1):
+#             a[i-j][j] -= sum([a[i-k][k]*a[j-k][k]/a[0][k] for k in range(max(0,i-m),j)])
+#     for i in range(n):
+#         b[i] -= sum([a[i-j][j]*b[i]/a[0][j] for j in range(max(0,i-m),i)])
+#     # 上三角回代过程
+#     for i in range(n-1,0,-1):
+#         try:
+#             b[i] -= sum([a[j-i][i]*b[i] for j in range(i+1,min(n,i+m+1))])
+#         except IndexError as p:
+#             print(p)
+#             print(" i = "+ str(i) )
+#         b[i] = b[i] /a[0][i]
+#     return a,b
+
+def cholesky(n, m, a, b):
+    """
+    Cholesky求解方法,返回解向量和矩阵
+    return a,b
+    """
+    # print(a)
+    for k in range(n):
+        #先解对角元素
+        a[0][k] -= sum([a[k-j][j]**2*a[0][j] for j in range(max(0,k-m),k)])
+        for l in range(1, min(n-k,m+1)):
+            a[l][k] -= sum([a[k-j][j]*a[0][j]*a[l+k-j][j] for j in range(max(0,l+k-m),k)])
+            a[l][k] /= a[0][k]
+#回代解方程
+    for k in range(n):
+        b[k] -= sum([a[k-j][j]*b[j] for j in range(max(0,k-m),k)])
+    for k in range(n):
+        b[k] /= a[0][k]
+    for k in range(n):
+        ki = n-1-k
+        b[ki] -= sum([a[j][ki]*b[ki+j] for j in range(1,min(n-ki,m+1))])
+    return a,b
+
+def draw(b,n):
+    '''
+    作图函数
+    '''
+    x = np.linspace(0,n-1,n)
+    y = np.array(b)
+    plt.plot(x,y,'r-')
+    plt.xlabel('i')
+    plt.ylabel("x[i]")
+    plt.show()
+
 
 if __name__ =="__main__":
     a = [[5]+[6 for _ in range(n-2)]+[5],[4 for _ in range(n-1)],[1 for _ in range(n-2)]]
     b = [60]+([120]*(n-2))+[60]
-
-    
-    a[0][0]= sqrt(a[0][0])
-    for i in range(1,n): # 行
-        for j in range(max(0,i-m),i): # 列
-            a[i-j][j] -= sum([a[i-k][k]*a[j-k][k] for k in range(max(0,i-m),j)])# 计算列中元素
-            a[i-j][j] /= a[0][j]
-        a[0][i] -= sum([a[i-k][k]**2 for k in range(max(0,i-m),i)])# 先计算对角元素
-        try :
-            a[0][i] = sqrt(a[0][i])
-        except ValueError as p : # 防止产生错误
-            print (p)
-    print(a[0])
-    print(a[1])
-    print(a[2])
-    b=solve(a,b)
-    # print(b)
-    print(len(validation(n,b)))
+    a1,b1=cholesky(n,m,a,b)
+    # print(validation(n,b1))
+    draw(b1,n)

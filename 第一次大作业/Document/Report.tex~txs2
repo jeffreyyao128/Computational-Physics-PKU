@@ -1,4 +1,4 @@
-\documentclass[a4paper]{ctexart}
+\documentclass{ctexart}
 
 \usepackage{fancyhdr}
 \usepackage{listings}
@@ -8,7 +8,6 @@
 \usepackage{graphicx}
 \usepackage[noend]{algpseudocode}
 \usepackage{physics}
-\usepackage{multirow}
 
 % Codes settings
 \lstset{
@@ -31,143 +30,29 @@
 \cfoot{}
 \lfoot{\itshape Jeffreyyao@pku.edu.cn}
 
-\title{计算物理\, 2019春季 \,第一次大作业}
+\title{计算物理大作业}
 \author{姚铭星}
 \date{1700011321}
  		
 \begin{document}
 \maketitle
-\tableofcontents
-%\thispagestyle{fancy}
+\thispagestyle{fancy}
 
 
-\section{第一题：十进制整数与双精度浮点数的相互转换}
+\section{第一题}
 \subsection{问题描述}
-编写两个程序，实现任意十进制数与其规范化二进制双精度浮点数之间的转换，并举足够多的算例说明你程序的正确性
 \subsection{思路}
-在IEEE 754标准下, double型机器数的编码长度为$64$, 格式为
-\begin{gather}
-\begin{tabular}{c|ccc|ccc}
-(S)$_2$        & \multicolumn{3}{c|}{(E)$_2$}           & \multicolumn{3}{c}{(T)$_2$}            \\ \hline
-a{[}0{]} & a{[}1{]} & ... & a{[}11{]} & a{[}12{]} & ... & a{[}63{]}
-\end{tabular}
-\\
-d = (-)^\mathrm{S}\times\left\{\begin{array}{rcl}
-2^{\mathrm{E}-1023}(1+2^{-52}\mathrm{T})& &\text{if }\mathrm{E}>0\\
-2^{-1022}(0+2^{-52}\mathrm{T})& &\text{if }\mathrm{E}=0
-\end{array} \right.
-\end{gather}
-对于十进制转二进制数，具体操作如下：
-\begin{enumerate}
-	\item 确定符号位
-	\item 分开计算整数位和小数位
-	\item 确定指数位
-	\item 判断是否上溢或者下溢
-\end{enumerate}
-对于二进制转十进制数，具体操作为：
-\begin{enumerate}
-	\item 判断符号，取绝对值
-	\item 对$x$取$log_{2}$，并向下取整，得到指数位$E$，加上偏移量$1023$
-	\item 计算$x/2^E-1$ 得到小数位
-	\item 将指数位和小数位转化为二进制
-\end{enumerate}
-
-\subsection{实现}
-\begin{lstlisting}
-# 二进制转十进制
-def bi2deci(a):
-	'''
-	实现double型二进制数转十进制 
-	输入为a[64]数据类型为<class ='list'>
-	输出为float(python默认为double)
-	'''
-	sign = -1 if a[0]==1 else 1 #符号位
-	E = 0# 指数位
-	for i in range(1,12):
-		E += 2**(11-i)*a[i]
-	# print(E)
-	T = 1# 尾数位
-	for i in range(12,64):
-		T += a[i]*2**(11-i)
-	# print(T)
-	x = sign * T * 2**(E - 1023)
-	if x < 2**(-1022):
-		return 0
-	if x >= 2**(1023):
-		return NaN
-	return x
 
 
-# 十进制转二进制
-
-def deci2bi(a):
-'''
-	实现double(float)型十进制数转二进制
-	返回res[64]
-	a[0]为符号,a[1:12]为指数位,a[12:64]为小数位
-	'''
-	S = np.sign(a)
-	res = [0 for i in range(64)]
-	if S ==0:
-		return res
-	S = 0 if np.sign(a)==1 else 1
-	res[0] = int(S)
-	a = abs(a)
-	E = ms.floor(ms.log2(a))
-	if a >=2:
-		# 符号位> 1023
-		while a>=2 :
-			a/=2
-	elif a<1:
-		while a <1:
-			a*=2
-	# 此时 a \in (1,2]
-	a -= 1 #去掉首位的1
-	# print("E = "+str(E))
-	E +=1023 #加上偏移量
-	for k in range(11,0,-1): #计算指数位
-		res[k] =int(E %2.0)
-		E /=2.0
-		if E==0:
-			break
-	p = 1
-	while p<=52:
-		a *=2
-		h = 1 if a>=1.0 else 0
-		res[11+p] = h
-		a -=h
-		p+= 1
-	return res
-\end{lstlisting}
-
-\subsection{结果讨论}
-表格中几乎涵盖了所有上溢、下溢、零、无理数的例子，可以说明程序的进制转换是合理的
-\begin{table}[htb]
-	\caption{一些十进制实数与机器数编码间相互转换的例子}
-	\label{tab:db_str}
-	\begin{small}
-		\begin{tabular}{c|c|c}
-			\hline
-			x & deci2bi(x) & bi2deci(deci2bi(x))\\ \hline
-			0. & 0 00000000000 0000000000000000000000000000000000000000000000000000 & 0\\ 
-			$\pi$ & 0 10000000000 1001001000011111101101010100010001000010110100011000 & 3.14159$\cdots$\\
-			-0.0625 & 1 01111111011 0000000000000000000000000000000000000000000000000000 & -0.0625 \\
-			$2^{-1022}$ & 0 00000000001 0000000000000000000000000000000000000000000000000000 & 2.22507$\cdots$e-308\\
-			$1.5\times2^{1023}$ & 0 11111111110 1000000000000000000000000000000000000000000000000000 &1.34827$\cdots$e+308\\
-			$0.5\times2^{-1022}$ & 0 00000000000 1000000000000000000000000000000000000000000000000000 & 1.11254$\cdots$e-308\\
-			$-2^{1024}$ & 1 11111111111 0000000000000000000000000000000000000000000000000000 & NaN\\ \hline
-		\end{tabular}
-	\end{small}
-\end{table}
 \section{第二题：高斯求积}
 \subsection{问题描述}
 构造以下几种非标准权函数的Gauss求积公式的求积系数与节点：
 
-\begin{align}
-\int_{0}^{1} \sqrt{x} f(x) \mathrm{d} x &\approx A_{0} f\left(x_{0}\right)+A_{1} f\left(x_{1}\right)\label{Equa::1} \\
-\int_{-1}^{1}\left(1+x^{2}\right) f(x) \mathrm{d} x &\approx A_{0} f\left(x_{0}\right)+A_{1} f\left(x_{1}\right) \label{Equa::2}\\
-\int_{0}^{1} \sqrt{x} f(x) \mathrm{d} x &\approx A_{0} f\left(x_{0}\right)+A_{1} f\left(x_{1}\right)+A_{2} f\left(x_{2}\right) \label{Equa::3}
-\end{align}
+\begin{align*}{c}
+{\int_{0}^{1} \sqrt{x} f(x) \mathrm{d} x &\approx A_{0} f\left(x_{0}\right)+A_{1} f\left(x_{1}\right)} \\ 
+{\int_{-1}^{1}\left(1+x^{2}\right) f(x) \mathrm{d} x &\approx A_{0} f\left(x_{0}\right)+A_{1} f\left(x_{1}\right)} \\ 
+{\int_{0}^{1} \sqrt{x} f(x) \mathrm{d} x &\approx A_{0} f\left(x_{0}\right)+A_{1} f\left(x_{1}\right)+A_{2} f\left(x_{2}\right)}
+\end{align*}
 \subsection{思路}
 具有如下形式的积分问题可以用高斯求积来解决：
 $$\int_{a}^{b} w(x)f(x)dx$$
@@ -192,55 +77,10 @@ A_j=\frac{(p_{N-1}(x),p_{N-1}(x))}{p_{N-1}(x_j)p'_{N}(x_j)}
 \subsection{伪代码}
 求解流程大概按下面进行
 \begin{enumerate}
-	\item 赋予初始条件$P_{-1}(x)=0$和$P_0(x)=1$
-	\item 利用递推关系，构建N个在权函数$w(x)$下正交的多项式
+	\item 构建N个在权函数$w(x)$下正交的多项式
 	\item 求解每一个多项式的根
 	\item 根据式\ref{w}求解系数$A_j$
 \end{enumerate}
-\subsection{实现}
-具体操作中调用了\textbf{numpy.poly1d()}类，简化了大部分计算过程。
-\begin{lstlisting}
-import numpy as np
-def sqrtbuild(N):
-	'''
-	构造以\sqrt[x]为权函数的最高位N的正交多项式
-	'''
-	res = [0 for _ in range(N+2)] #把 n =-1存在了第一个
-	res[0] = np.poly1d([0])
-	res[1] = np.poly1d([1])
-	for x in range(1,N+1):
-		p1 = np.poly1d([1,0])*res[x]**2
-		p2 = res[x]**2
-		p3 = res[x-1]**2
-		a = sqrtinte(p1)/sqrtinte(p2)
-		b = sqrtinte(p2)/sqrtinte(p3) if x >1 else 0
-		res[x+1] = np.poly1d([1,-a])*res[x] - b*res[x-1] #防止出现0/0
-	return res[1:len(res)]
-\end{lstlisting}
-求根直接调用\textbf{poly1d}的成员$r$。
-\subsection{结果}
-
-\begin{table}[hbtp]
-	\centering
-	\caption{各非标准权函数的Gauss求积公式的求积系数和节点}
-	\label{tab:Gauss-main}
-	\begin{tabular}{c|c|rr}
-		\hline
-		机械求积公式      & $k$ & $x_k$        & $A_k$       \\ \hline
-		\multirow{2}{*}{(\ref{Equa::1})} & 0 & 0.28994920  & 0.27755600 \\
-		& 1 & 0.82116191  & 0.38911067 \\ \hline
-		\multirow{2}{*}{(\ref{Equa::2})} & 0 & -0.63245553 & 1.33333333 \\
-		& 1 & 0.63245553  & 1.33333333 \\ \hline
-		\multirow{3}{*}{(\ref{Equa::3})} & 0 & 0.16471029  & 0.12578267 \\
-		& 1 & 0.54986850  & 0.30760237 \\
-		& 2 & 0.90080583  & 0.23328162 \\ \hline
-	\end{tabular}
-\end{table}
-
-\subsection{结果检验}
-理论上来说，拥有$n$个节点的Gaussian求积公式应当有$2n+1$的代数精度。
-
-对于$n=3$的情况，不难代入mathematica验证其精度与输入有效位数相同（即及其精度）
 
 \section{第三题：放射衰变问题}
 
@@ -293,10 +133,10 @@ def decay(ta,tb,dt,tmax=1):
 \end{lstlisting}
 \subsection{结果讨论}
 \subsubsection{短期衰变}
-在固定$\tau_A=1s$后，可以认为，当时间$t_{max}$小于任何一个半衰期，就可以认为是短期衰变，这里取固定$t_{max}=0.1s$
+在固定$\tau_A=1s$后，可以认为，当时间$t_{max}$小于任何一个半衰期，就可以认为是短期衰变，这里取固定$t_max=0.1s$
 
 计算结果如下图:
-\begin{figure}[hbt]
+\begin{figure}
 	\centering
 	\includegraphics[width=8cm]{./fig/Figure_1.png}
 	\caption{短程结果}
@@ -347,7 +187,7 @@ $$\Delta(t)\leq\frac{1}{2}\frac{\Delta t\cdot t}{\tau^2}$$
 \end{figure}
 
 \newpage
-\section{第四题：三次样条插值}
+\section{第四题：三次样条差值}
 \subsection{问题描述}
 对于飞机机翼的轮廓每隔$0.1 m $的值，利用自然边界条件，使用三次样条插值估计任意一点的$y$值，需要与原始数据点一同绘制出飞机的轮廓曲线。
 \begin{table}[htb]
@@ -675,8 +515,7 @@ def New_GeneralizedLegrend(l,m,x):
 	d = 1
 		for a in range(1,m+1):
 		d *= (2*a+1)/(2*a)  
-	res = ms.log10(abs(Pi))+m/2.0*ms.log10(1-x**2)+\
-	1/2.0*ms.log10(d/(4*ms.pi))
+	res = ms.log10(abs(Pi))+m/2.0*ms.log10(1-x**2)+1/2.0*ms.log10(d/(4*ms.pi))
 	return res
 \end{lstlisting}
 \subsubsection{结果}

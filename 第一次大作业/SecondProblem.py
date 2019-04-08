@@ -28,9 +28,12 @@ def sqrtbuild(N):
         res[x+1] = np.poly1d([1,-a])*res[x] - b*res[x-1]
     return res[1:len(res)]
 
+
 if __name__ == "__main__":
     # print(sqrtinte(np.poly1d([1,0])))
-    # sqe = sqrtbuild(3)
     # print(sqrtinte(sqe[1]*sqe[0]))
+    sqe = sqrtbuild(3)
+    roots = sqe[3].r
+    print(roots)
     
         

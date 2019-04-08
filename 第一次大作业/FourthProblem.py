@@ -6,8 +6,7 @@
 '''
 
 import matplotlib.pyplot as plt
-import numpy as np
-import math
+import numpy as np # 这两个包仅用作画图
 
 x0 = [0,3,5,7,9,11,12,13,14,15] # 函数的定义域为[0,15]
 y0=[0,1.2,1.7,2.0,2.1,2.0,1.8,1.2,1.0,1.6] 

@@ -1,4 +1,4 @@
-\documentclass[a4paper]{ctexart}
+\documentclass{ctexart}
 
 \usepackage{fancyhdr}
 \usepackage{listings}
@@ -31,14 +31,13 @@
 \cfoot{}
 \lfoot{\itshape Jeffreyyao@pku.edu.cn}
 
-\title{计算物理\, 2019春季 \,第一次大作业}
+\title{计算物理大作业}
 \author{姚铭星}
 \date{1700011321}
  		
 \begin{document}
 \maketitle
-\tableofcontents
-%\thispagestyle{fancy}
+\thispagestyle{fancy}
 
 
 \section{第一题：十进制整数与双精度浮点数的相互转换}
@@ -57,108 +56,7 @@ d = (-)^\mathrm{S}\times\left\{\begin{array}{rcl}
 2^{-1022}(0+2^{-52}\mathrm{T})& &\text{if }\mathrm{E}=0
 \end{array} \right.
 \end{gather}
-对于十进制转二进制数，具体操作如下：
-\begin{enumerate}
-	\item 确定符号位
-	\item 分开计算整数位和小数位
-	\item 确定指数位
-	\item 判断是否上溢或者下溢
-\end{enumerate}
-对于二进制转十进制数，具体操作为：
-\begin{enumerate}
-	\item 判断符号，取绝对值
-	\item 对$x$取$log_{2}$，并向下取整，得到指数位$E$，加上偏移量$1023$
-	\item 计算$x/2^E-1$ 得到小数位
-	\item 将指数位和小数位转化为二进制
-\end{enumerate}
 
-\subsection{实现}
-\begin{lstlisting}
-# 二进制转十进制
-def bi2deci(a):
-	'''
-	实现double型二进制数转十进制 
-	输入为a[64]数据类型为<class ='list'>
-	输出为float(python默认为double)
-	'''
-	sign = -1 if a[0]==1 else 1 #符号位
-	E = 0# 指数位
-	for i in range(1,12):
-		E += 2**(11-i)*a[i]
-	# print(E)
-	T = 1# 尾数位
-	for i in range(12,64):
-		T += a[i]*2**(11-i)
-	# print(T)
-	x = sign * T * 2**(E - 1023)
-	if x < 2**(-1022):
-		return 0
-	if x >= 2**(1023):
-		return NaN
-	return x
-
-
-# 十进制转二进制
-
-def deci2bi(a):
-'''
-	实现double(float)型十进制数转二进制
-	返回res[64]
-	a[0]为符号,a[1:12]为指数位,a[12:64]为小数位
-	'''
-	S = np.sign(a)
-	res = [0 for i in range(64)]
-	if S ==0:
-		return res
-	S = 0 if np.sign(a)==1 else 1
-	res[0] = int(S)
-	a = abs(a)
-	E = ms.floor(ms.log2(a))
-	if a >=2:
-		# 符号位> 1023
-		while a>=2 :
-			a/=2
-	elif a<1:
-		while a <1:
-			a*=2
-	# 此时 a \in (1,2]
-	a -= 1 #去掉首位的1
-	# print("E = "+str(E))
-	E +=1023 #加上偏移量
-	for k in range(11,0,-1): #计算指数位
-		res[k] =int(E %2.0)
-		E /=2.0
-		if E==0:
-			break
-	p = 1
-	while p<=52:
-		a *=2
-		h = 1 if a>=1.0 else 0
-		res[11+p] = h
-		a -=h
-		p+= 1
-	return res
-\end{lstlisting}
-
-\subsection{结果讨论}
-表格中几乎涵盖了所有上溢、下溢、零、无理数的例子，可以说明程序的进制转换是合理的
-\begin{table}[htb]
-	\caption{一些十进制实数与机器数编码间相互转换的例子}
-	\label{tab:db_str}
-	\begin{small}
-		\begin{tabular}{c|c|c}
-			\hline
-			x & deci2bi(x) & bi2deci(deci2bi(x))\\ \hline
-			0. & 0 00000000000 0000000000000000000000000000000000000000000000000000 & 0\\ 
-			$\pi$ & 0 10000000000 1001001000011111101101010100010001000010110100011000 & 3.14159$\cdots$\\
-			-0.0625 & 1 01111111011 0000000000000000000000000000000000000000000000000000 & -0.0625 \\
-			$2^{-1022}$ & 0 00000000001 0000000000000000000000000000000000000000000000000000 & 2.22507$\cdots$e-308\\
-			$1.5\times2^{1023}$ & 0 11111111110 1000000000000000000000000000000000000000000000000000 &1.34827$\cdots$e+308\\
-			$0.5\times2^{-1022}$ & 0 00000000000 1000000000000000000000000000000000000000000000000000 & 1.11254$\cdots$e-308\\
-			$-2^{1024}$ & 1 11111111111 0000000000000000000000000000000000000000000000000000 & NaN\\ \hline
-		\end{tabular}
-	\end{small}
-\end{table}
 \section{第二题：高斯求积}
 \subsection{问题描述}
 构造以下几种非标准权函数的Gauss求积公式的求积系数与节点：
@@ -347,7 +245,7 @@ $$\Delta(t)\leq\frac{1}{2}\frac{\Delta t\cdot t}{\tau^2}$$
 \end{figure}
 
 \newpage
-\section{第四题：三次样条插值}
+\section{第四题：三次样条差值}
 \subsection{问题描述}
 对于飞机机翼的轮廓每隔$0.1 m $的值，利用自然边界条件，使用三次样条插值估计任意一点的$y$值，需要与原始数据点一同绘制出飞机的轮廓曲线。
 \begin{table}[htb]

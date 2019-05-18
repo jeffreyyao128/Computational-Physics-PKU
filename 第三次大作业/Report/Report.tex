@@ -1,0 +1,98 @@
+\documentclass[a4paper]{ctexart}
+
+\usepackage{fancyhdr}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{amsmath}
+\usepackage{algorithm}
+\usepackage{graphicx}
+\usepackage[noend]{algpseudocode}
+\usepackage{physics}
+\usepackage{multirow}
+
+% Codes settings
+\lstset{
+	language=Python,
+	numbers = left,
+	numberstyle = \tiny,
+	basicstyle = \small,
+	keywordstyle = \color{blue!70}\bfseries,
+	stringstyle = \color{red},
+	commentstyle =\color[rgb]{0.6,.6,.6}\itshape,
+	identifierstyle={},
+	frame = shadowbox,
+	rulesepcolor= \color{ red!20!green!20!blue!20},
+	escapeinside=``
+}
+
+%Page setting
+\pagestyle{fancy}
+\rfoot{\thepage}
+\cfoot{}
+\lfoot{\itshape Jeffreyyao@pku.edu.cn}
+\setlength{\abovecaptionskip}{0.05cm}
+\setlength{\belowcaptionskip}{0.05cm}
+
+\title{计算物理第三次开卷考试}
+\author{姚铭星 1700011321}
+\date{}
+
+\begin{document}
+\maketitle
+\section{第一题：原子的激发谱}
+\subsection{基态的求解}
+对于数值求解不含时薛定谔方程：
+\begin{equation}
+\left[-\frac{1}{2} \frac{d^{2}}{d x^{2}}+V(x)\right] \psi(x)=E_{n} \psi(x)
+\end{equation}
+可以将二阶导数该为有限差分
+\begin{equation}
+\partial_{x}^{2} \psi\left(x_{i}\right)=\frac{\psi\left(x_{i+1}\right)-2 \psi\left(x_{i}\right)+\psi\left(x_{i-1}\right)}{(\Delta x)^{2}}+o\left((\Delta x)^{2}\right)
+\end{equation}
+这样可以将哈密顿量表示为三对角对称矩阵的形式：
+\begin{equation}
+\left(H_{0}\right)_{i j}=\left\{\begin{array}{ll}{\frac{1}{(\Delta x)^{2}}-\frac{1}{\sqrt{x_{i}^{2}+2}},} & {i=j} \\ {\frac{-1}{2(\Delta x)^{2}},} & {|i-j|=1} \\ {0,} & {|i-j|>1}\end{array}\right.
+\end{equation}
+注意，此处已经使用了边界条件：
+\begin{equation}
+\psi(x_{-1})=\psi(x_{N})=0
+\end{equation}
+这样问题变为求解本征值问题：
+\begin{equation}
+H_0\psi = E_0 \psi
+\end{equation}
+由于已经给定近似的能量值$E_0=-0.48$,利用原点位移的方法可以直接将问题转化为求解差值的问题。这样可以保证反幂法的顺利运行。
+
+定义新的矩阵$A$为：
+\begin{equation}
+A = H_0 + 0.48I
+\end{equation}
+此时利用Cholesky分解(在第一次作业中已经实现过)实现类似于求逆的操作
+
+\section{时间演化}
+对于加上电场之后的含时的薛定谔方程，与上问中的哈密顿量只差相差一个对角阵:
+\begin{equation}
+\mathcal{H}(t)=\mathcal{H}_{0}+x E(t)
+\end{equation}
+因此此时哈密顿量仍然保有三对角形式，并且为实对称矩阵。在时空上划定格点将方程离散化后得到：
+
+\begin{equation}
+\begin{aligned}
+\psi_{i}^{(j)}&=\psi\left(x_{i}, t_{j}\right)\\
+i\frac{\psi_{i}^{(j+1)}-\psi_{i}^{(j)}}{\Delta t}&=\mathcal{H}(t)\psi(t)
+\end{aligned}
+\end{equation}
+
+为了保证体系的守恒量不受破坏，我们采用辛算法Crank-Nicolson（欧拉中点算法），其格式为：
+\begin{equation}
+\mathrm{i} \frac{\psi_{i}^{(j+1)}-\psi_{i}^{(j)}}{\Delta t}=\sum_{l} H\left(t_{j+1 / 2}\right)_{i l} \psi_{l}\left(t_{j+1 / 2}\right)=\sum_{l} \frac{1}{2} H\left(t_{j+1 / 2}\right)_{i l}\left(\psi_{l}^{(j)}+\psi_{l}^{(j+1)}\right)
+\end{equation}
+这样，每一步递推变成求解线性方程问题：
+\begin{equation}
+\left(1+\frac{\mathrm{i} \Delta t}{2} H\left(t_{j+1 / 2}\right)\right) \psi^{(j+1)}=\left(1-\frac{\mathrm{i} \Delta t}{2} H\left(t_{j+1 / 2}\right)\right) \psi^{(j)}
+\end{equation}
+而不难发现，此时的Crank-Nicolson形式有幺正性质，即满足：
+\begin{equation}
+U_jU^{\dagger}_j=1
+\end{equation}
+\end{document}

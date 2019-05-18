@@ -3,10 +3,10 @@
 '''
 # 矩阵半带宽为2
 import numpy as np  # 调用numpy仅在validation函数中用作检验
-import math 用于开根号计算
+import math # 用于开根号计算
 import matplotlib.pyplot as plt # 用作绘图
 
-n = 10000 # 矩阵大小
+n = 1000 # 矩阵大小
 m = 2 # 带宽
 
 # 利用三个向量存储矩阵
@@ -18,8 +18,8 @@ def validation(n, b):
     A = np.diag([5]+([6]*(n-2))+[5])
     A += np.diag([4]*(n-1), k=1)
     A += np.diag([4]*(n-1), k=-1)
-    A += np.diag([1]*(n-2), k=2)
-    A += np.diag([1]*(n-2), k=-2)
+    # A += np.diag([1]*(n-2), k=2)
+    # A += np.diag([1]*(n-2), k=-2)
     return A.dot(np.asarray(b))
 
 # def NeoCholesky(a,b):
@@ -41,12 +41,14 @@ def validation(n, b):
 #         b[i] = b[i] /a[0][i]
 #     return a,b
 
-def cholesky(n, m, a, b):
+def cholesky(a, b):
     """
     Cholesky求解方法,返回解向量和矩阵
     return a,b
     """
     # print(a)
+    n= len(a[0])
+    m =len(a)-1
     for k in range(n):
         #先解对角元素
         a[0][k] -= sum([a[k-j][j]**2*a[0][j] for j in range(max(0,k-m),k)])
@@ -76,8 +78,18 @@ def draw(b,n):
 
 
 if __name__ =="__main__":
-    a = [[5]+[6 for _ in range(n-2)]+[5],[4 for _ in range(n-1)],[1 for _ in range(n-2)]]
-    b = [60]+([120]*(n-2))+[60]
-    a1,b1=cholesky(n,m,a,b)
+    # a = [[5]+[6 for _ in range(n-2)]+[5],[4 for _ in range(n-1)]\
+    #     # ,[1 for _ in range(n-2)]\
+    #         ]
+    # b = [60]+([120]*(n-2))+[63]
+    # a1,b1=cholesky(a,b)
     # print(validation(n,b1))
-    draw(b1,n)
+    # draw(b1,n)
+    A = [[3., 5., 3.], [1., 1.]]
+    B = np.diag([3, 5, 3]) + np.diag([1, 1], k=1) + np.diag([1, 1], k=-1)
+    b = np.array([1., 2., 3.])
+    L,v = cholesky(A,b)
+    # print(L)
+    # print(np.linalg.cholesky(B))
+    # v = np.array(solve(L, b))
+    print(B@v)

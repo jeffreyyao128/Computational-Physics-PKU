@@ -17,7 +17,7 @@ def Build_H(xmax,N):
     D1 += np.diag([-1/(2*Dx**2) for i in range(N-1)],k=1)+np.diag([-1/(2*Dx**2) for i in range(N-1)],k=-1)
     return D1
     
-def antipower_method(v,N,xmax,x0=0.48,e=10**(-6),Nmax=10**5):
+def antipower_method(v,N,xmax,x0=0.48,e=10**(-10),Nmax=10**5):
     '''
     反幂法
     初始化矢量v,格点个数N,解空间xmax,初始位移x0=0.48,精度e=10**(-6),最大迭代次数Nmax=10**5
@@ -47,6 +47,18 @@ def antipower_method(v,N,xmax,x0=0.48,e=10**(-6),Nmax=10**5):
         raise("Two many loops "+str(delta))
     # return max(B@np.asarray(v), key=lambda x: abs(x)), v # 返回的是特征值和本征矢
     return v , a
+
+def shape(psi,xmax):
+    '''
+    波函数作图函数
+    '''
+    N = len(psi)
+    x = np.linspace(-xmax,xmax,N)
+    y = abs(np.array(psi))**2
+    plt.plot(x,y)
+    plt.show()
+
+    
 
 
 def check(A,v,u):
@@ -94,33 +106,32 @@ def Time_evolution(psi0,xmax,N,dt = .05,T_max = 18*2*np.pi):
     H0 = [[1/Dx**2-1/np.sqrt((i*Dx)**2+2) for i in np.linspace(-xmax,xmax, N)], [-1/(2*Dx**2) for i in range(N-1)]]  # t=0时哈密顿量
     psi = deepcopy(psi0)
     sequence =[]
-    sequence.append(psi)
+    # sequence.append(psi)
+    sequence.append(1)
     for t in np.linspace(0,T_max,Nt):
         print("t = "+str(t))
         t1 = t+ .5*dt
-        dH = [x*E0*np.sin(t1/(2*18))**2*np.sin(t1) for x in np.linspace(-xmax,xmax,N)] # 计算哈密顿量含时项
+        dH = [x*E0*(np.sin(t1/(2*18)))**2*np.sin(t1) for x in np.linspace(-xmax,xmax,N)] # 计算哈密顿量含时项
         H = [[H0[0][i]+dH[i] for i in range(N)],[each for each in H0[1]]]
-        b = multi([[1-.5*1j*dt*each for each in H[0]],
-                   [-.5*1j*dt*each for each in H[1]]], psi)
+        b = multi([[1-.5j*dt*each for each in H[0]],
+                   [-.5j*dt*each for each in H[1]]], psi[:])
         L = cholesky([[1+.5*1j*dt*each for each in H[0]],
                       [.5*1j*dt*each for each in H[1]]])
-        v = solve(L,b)
+        v = solve(L,deepcopy(b))
         psi = deepcopy(v)
-        sequence.append(psi)
-    P = [abs(sum([psi[i].conjugate()*psi0[i] for i in range(N)]))**2 for psi in sequence]
-    return P
-
-    
-
-
+        # renorm = np.linalg.norm(np.asarray(b))
+        # psi=[each/renorm for each in b]
+        res = abs(sum([psi[i]*psi0[i].conjugate() for i in range(N)]))**2
+        sequence.append(res)
+    return sequence
     
 
 if __name__ == "__main__":
     N = 20000
     xmax=2000
     Dx = 2*xmax/(N-1)
-    T_max = 18*2*np.pi
-    dt = .1
+    T_max = 6*2*np.pi
+    dt = .5
     Nt = int(T_max/dt)
     # 第一问
     # v =np.array([0.5 for i in range(N)])
@@ -128,9 +139,10 @@ if __name__ == "__main__":
     # 第二问
     psi = groud_state(xmax,N)[0]
     a = np.linalg.norm(np.asarray(psi))
-    psi = [each/a for each in psi] 
+    psi = [each/a for each in psi]
+    # shape(psi,xmax/200)
     # print(psi[1])
-    P = Time_evolution(psi,xmax,N,dt=dt)
+    P = Time_evolution(psi,xmax,N,dt=dt,T_max=T_max)
     t = np.linspace(0,T_max,Nt+1)
     plt.plot(t,P)
     plt.show()

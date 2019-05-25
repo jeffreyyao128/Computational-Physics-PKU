@@ -131,7 +131,7 @@ if __name__ == "__main__":
     xmax=2000
     Dx = 2*xmax/(N-1)
     T_max = 6*2*np.pi
-    dt = .5
+    dt = .2
     Nt = int(T_max/dt)
     # 第一问
     # v =np.array([0.5 for i in range(N)])

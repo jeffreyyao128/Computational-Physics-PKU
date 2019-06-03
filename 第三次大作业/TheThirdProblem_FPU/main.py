@@ -13,7 +13,7 @@ class phonon:
     Q_dot=[]
     q =[]
     p =[]
-    dt = 0.05
+    dt = 0.1
     def __init__(self,Q0,Q00,a=0):
         self.alpha=a
         self.Q = Q0[:]
@@ -84,7 +84,7 @@ class phonon:
         for _ in intern:
             E.append([self.Energ(i) for i in range(p)])
             self.Evolve()
-            print(_)
+            # print(_)
         res = [np.array([each[i] for each in E]) for i in range(p)]
         for i in range(len(res)):
             plt.plot(intern,res[i],label="E"+str(i))
@@ -93,8 +93,34 @@ class phonon:
         plt.ylabel("Energy")
         plt.show()
 
+    def second_plot(self,T,p):
+        '''
+        用于做第五问
+        '''
+        self.dt=0.5
+        t_max = T *2*np.pi/self.omega
+        intern = np.linspace(0,T,int(t_max/self.dt))
+        E = []
+        t =[]
+        j = 0
+        for _ in intern:
+            if j%10==0:
+                t.append(_)
+                E.append([self.Energ(i) for i in range(p)])
+                print(_)
+            self.Evolve()
+            j+=1
+        res = [np.array([each[i] for each in E]) for i in range(p)]
+        for i in range(len(res)):
+            plt.plot(t,res[i],label="E"+str(i))
+        plt.legend()
+        plt.xlabel(r"t(2$\pi / \omega$)")
+        plt.ylabel("Energy")
+        plt.show()
+
     def total_energy(self):
         return sum([self.Energ(i) for i in range(self.__n)])
+        
 
     def check(self):
         '''
@@ -108,15 +134,13 @@ class phonon:
 
 if __name__ == "__main__":
     n = 32
-    p=phonon([4]+[0 for _ in range(n-1)],[0 for _ in range(n)],a=0)
-    # print(p.total_energy())
-    # for _ in range(1000):
-    #     p.Evolve()
-    # print(p.total_energy())
-    # p.check()
-    # print(p.q)
-    # E1 = p.Energ(1)
-    # p.Evolve()
-    # print(p.Energ(1))
-    p.plot(160,5)
-    # A = np.array([[np.sqrt(2.0/(32+1))*np.sin(np.pi*(i+1)*(j+1)/(32+1)) for i in range(32)] for j in range(32)])
+    # 第二问
+    # p=phonon([4]+[0 for _ in range(n-1)],[0 for _ in range(n)],a=0.25)c
+    # p.plot(160,5)
+    # 第四问
+    # 第五问
+    p=phonon([20]+[0 for _ in range(n-1)],[0 for _ in range(n)],a=0.25)
+    p.dt=0.5
+    p.second_plot(2000,5)
+    
+

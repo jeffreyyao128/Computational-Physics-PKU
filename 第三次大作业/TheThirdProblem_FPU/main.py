@@ -95,6 +95,7 @@ class phonon:
         for _ in intern:
             E.append([self.Energ(i) for i in range(p)])
             self.Evolve()
+            print(_)
         res = [np.array([each[i] for each in E]) for i in range(p)]
         for i in range(len(res)):
             plt.plot(intern,res[i],label="E"+str(i))
@@ -119,13 +120,13 @@ class phonon:
 if __name__ == "__main__":
     n = 32
     p=phonon([4]+[4]+[0 for _ in range(n-2)],[0 for _ in range(n)],a=0.25)
-    print(p.total_energy())
-    p.Evolve()
-    print(p.total_energy())
+    # print(p.total_energy())
+    # p.Evolve()
+    # print(p.total_energy())
     # p.check()
     # print(p.q)
     # E1 = p.Energ(1)
     # p.Evolve()
     # print(p.Energ(1))
-    # p.plot(5,2)
+    p.plot(100,2)
     # A = np.array([[np.sqrt(2.0/(32+1))*np.sin(np.pi*(i+1)*(j+1)/(32+1)) for i in range(32)] for j in range(32)])

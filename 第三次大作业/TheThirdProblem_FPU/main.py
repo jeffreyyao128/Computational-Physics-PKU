@@ -43,37 +43,26 @@ class phonon:
         '''
         返回\ dot p
         '''
-        pass
+        tq = [0]+q+[0]
+        return [tq[i-1]-2*tq[i]+tq[i+1]+self.alpha*((tq[i-1]-tq[i])**2-(tq[i]-tq[i+1])**2) for i in range(1, n+1)]
+    
     def Evolve(self):
         '''
         演化函数，只演化一步
         利用RK-4
         '''
-        tp=self.p
-        tq=self.q
         n = self.__n
-        kp1 = [-2*tq[0]+tq[1]+self.alpha*((-tq[0])**2-(tq[0]-tq[1])**2)]+[\
-            tq[i-1]-2*tq[i]+tq[i+1]+self.alpha*((tq[i-1]-tq[i])**2-(tq[i]-tq[i+1])**2) for i in range(1, n-1)]\
-                +[tq[n-2]-2*tq[n-1]+self.alpha*((tq[n-2]-tq[n-1])**2-(tq[n-1])**2)]
-        kq1 = tp
-        tp = [tp[i]+ self.dt*0.5*kp1[i] for i in range(n)]
-        tq = [tq[i]+ self.dt*0.5*kq1[i] for i in range(n)]
-        kp2 = [-2*tq[0]+tq[1]+self.alpha*((-tq[0])**2-(tq[0]-tq[1])**2)]+[tq[i-1]-2*tq[i]+tq[i+1]+self.alpha*((tq[i-1]-tq[i])**2-(tq[i]-tq[i+1])**2) for i in range(1, n-1)]\
-            + [tq[n-2]-2*tq[n-1]+self.alpha *((tq[n-2]-tq[n-1])**2-(tq[n-1])**2)]
-        kq2 = tp
-        tp = [tp[i] + self.dt*0.5*kp2[i] for i in range(n)]
-        tq = [tq[i] + self.dt*0.5*kq2[i] for i in range(n)]
-        kp3 = [-2*tq[0]+tq[1]+self.alpha*((-tq[0])**2-(tq[0]-tq[1])**2)]+[tq[i-1]-2*tq[i]+tq[i+1]+self.alpha*((tq[i-1]-tq[i])**2-(tq[i]-tq[i+1])**2) for i in range(1, n-1)]\
-            + [tq[n-2]-2*tq[n-1]+self.alpha * ((tq[n-2]-tq[n-1])**2-(tq[n-1])**2)]
-        kq3 = tp
-        tp = [tp[i] + self.dt*kp3[i] for i in range(n)]
-        tq = [tq[i] + self.dt*kq3[i] for i in range(n)]
-        kp4 = [-2*tq[0]+tq[1]+self.alpha*((-tq[0])**2-(tq[0]-tq[1])**2)]+[tq[i-1]-2*tq[i]+tq[i+1]+self.alpha*((tq[i-1]-tq[i])**2-(tq[i]-tq[i+1])**2) for i in range(1, n-1)]\
-            + [tq[n-2]-2*tq[n-1]+self.alpha *((tq[n-2]-tq[n-1])**2-(tq[n-1])**2)]
-        kq4 = tp
+        kq1 = self.__q_evolve(self.p)
+        kp1 = self.__p_evolve(self.q)
+        kq2 = self.__q_evolve([self.p[i]+.5*self.dt*kp1[i] for i in range(n)])
+        kp2 = self.__p_evolve([self.q[i]+.5*self.dt*kq1[i] for i in range(n)])
+        kq3 = self.__q_evolve([self.p[i]+.5*self.dt*kp2[i] for i in range(n)])
+        kp3 = self.__p_evolve([self.q[i]+.5*self.dt*kq2[i] for i in range(n)])
+        kq4 = self.__q_evolve([self.p[i]+self.dt*kp3[i] for i in range(n)])
+        kp4 = self.__p_evolve([self.q[i]+self.dt*kq3[i] for i in range(n)])
         # 更新q,p
         self.p = [self.p[i]+self.dt/6*(kp1[i]+2*kp2[i]+2*kp3[i]+kp4[i]) for i in range(n)]
-        self.q = [self.q[i]+self.dt/6 *(kq1[i]+2*kq2[i]+2*kq3[i]+kq4[i]) for i in range(n)]
+        self.q = [self.q[i]+self.dt/6*(kq1[i]+2*kq2[i]+2*kq3[i]+kq4[i]) for i in range(n)]
         # 更新Q，Q_dot
         self.__Tans_Q()
 
@@ -115,16 +104,17 @@ class phonon:
 
 if __name__ == "__main__":
     n = 32
-    p=phonon([4]+[4]+[0 for _ in range(n-2)],[0 for _ in range(n)],a=0.25)
-    print(p.total_energy())
-    p.Evolve()
-    print(p.total_energy())
+    p=phonon([4]+[4]+[0 for _ in range(n-2)],[0 for _ in range(n)],a=0)
+    # print(p.total_energy())
+    # for _ in range(1000):
+    #     p.Evolve()
+    # print(p.total_energy())
     # p.check()
     # print(p.q)
     # E1 = p.Energ(1)
     # p.Evolve()
     # print(p.Energ(1))
-    # p.plot(5,2)
+    p.plot(10,1)
     # A = np.array([[np.sqrt(2.0/(32+1))*np.sin(np.pi*(i+1)*(j+1)/(32+1)) for i in range(32)] for j in range(32)])
 
 

@@ -32,6 +32,18 @@ class phonon:
                                            for j in range(self.__n)]) for i in range(self.__n)]
         self.Q_dot = [np.sqrt(2.0/(self.__n+1))*sum([np.sin(np.pi*((i+1)*(j+1))/(self.__n+1))*self.p[j]
                                            for j in range(self.__n)]) for i in range(self.__n)]
+
+    def __q_evolve(self,p):
+        '''
+        返回\ dot q
+        '''
+        return p[:]
+    
+    def __p_evolve(self,q):
+        '''
+        返回\ dot p
+        '''
+        pass
     def Evolve(self):
         '''
         演化函数，只演化一步
@@ -70,7 +82,7 @@ class phonon:
         计算第i个模式的能量
         Energy 函数测试正确
         '''
-        return (0.5*self.Q_dot[i]**2+0.5*(2*np.sin(np.pi*0.5/(self.__n+1)))**2*self.Q[i]**2)
+        return (0.5*self.Q_dot[i]**2+0.5*(2*np.sin(np.pi*0.5*(i+1)/(self.__n+1)))**2*self.Q[i]**2)
 
     def plot(self,T,p):
         '''
@@ -88,20 +100,31 @@ class phonon:
             plt.plot(intern,each)
         plt.show()
 
+    def total_energy(self):
+        return sum([self.Energ(i) for i in range(self.__n)])
+
     def check(self):
-        print(self.Energ(0))
+        '''
+        检查傅里叶变换是否正确
+        # 傅里叶变换正确
+        '''
+        print(self.Energ(1))
         self.__Tans_Q()
-        print(self.Energ(0))
+        print(self.Energ(1))
 
 
 if __name__ == "__main__":
-    p=phonon([4]+[0 for _ in range(31)],[0 for _ in range(32)],a=0.25)
+    n = 32
+    p=phonon([4]+[4]+[0 for _ in range(n-2)],[0 for _ in range(n)],a=0.25)
+    print(p.total_energy())
+    p.Evolve()
+    print(p.total_energy())
     # p.check()
     # print(p.q)
     # E1 = p.Energ(1)
     # p.Evolve()
     # print(p.Energ(1))
-    p.plot(5,2)
+    # p.plot(5,2)
     # A = np.array([[np.sqrt(2.0/(32+1))*np.sin(np.pi*(i+1)*(j+1)/(32+1)) for i in range(32)] for j in range(32)])
 
 

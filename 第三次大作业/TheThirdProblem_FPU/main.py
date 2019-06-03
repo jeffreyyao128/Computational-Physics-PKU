@@ -108,7 +108,7 @@ class phonon:
 
 if __name__ == "__main__":
     n = 32
-    p=phonon([4]+[4]+[0 for _ in range(n-2)],[0 for _ in range(n)],a=0)
+    p=phonon([4]+[0 for _ in range(n-1)],[0 for _ in range(n)],a=0)
     # print(p.total_energy())
     # for _ in range(1000):
     #     p.Evolve()
@@ -118,5 +118,5 @@ if __name__ == "__main__":
     # E1 = p.Energ(1)
     # p.Evolve()
     # print(p.Energ(1))
-    p.plot(100,2)
+    p.plot(160,5)
     # A = np.array([[np.sqrt(2.0/(32+1))*np.sin(np.pi*(i+1)*(j+1)/(32+1)) for i in range(32)] for j in range(32)])

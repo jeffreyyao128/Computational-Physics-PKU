@@ -38,7 +38,7 @@ class phonon:
         返回\ dot q
         '''
         return p[:]
-    
+
     def __p_evolve(self,q):
         '''
         返回\ dot p
@@ -85,8 +85,11 @@ class phonon:
             E.append([self.Energ(i) for i in range(p)])
             self.Evolve()
         res = [np.array([each[i] for each in E]) for i in range(p)]
-        for each in res:
-            plt.plot(intern,each)
+        for i in range(len(res)):
+            plt.plot(intern,res[i],label="E"+str(i))
+        plt.legend()
+        plt.xlabel(r"t(2$\pi / \omega$)")
+        plt.ylabel("Energy")
         plt.show()
 
     def total_energy(self):
@@ -116,6 +119,3 @@ if __name__ == "__main__":
     # print(p.Energ(1))
     p.plot(10,1)
     # A = np.array([[np.sqrt(2.0/(32+1))*np.sin(np.pi*(i+1)*(j+1)/(32+1)) for i in range(32)] for j in range(32)])
-
-
-

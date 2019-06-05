@@ -8,12 +8,40 @@ from Cholesky import cholesky,solve # 调用自己的Cholesky方法
 from copy import deepcopy # 深度拷贝方法
 import matplotlib.pyplot as plt
 
+class wave_function:
+    '''
+    某一时刻的波函数类
+    '''
+    function = []
+    xmax = 0
+    N = 1
+    groud_energy = 0
+    def __init__(self,N,xmax):
+        '''
+        初始化波函数
+        '''
+        self.N = N
+        self.xmax =xmax
+        self.__Dx = 2*self.xmax/(self.N-1)
+        self.H = [[1/self.__Dx**2-1/np.sqrt((i*self.__Dx)**2+2) for i in np.linspace(-xmax,
+                                                                 xmax, N)], [-1/(2*self.__Dx**2) for i in range(N-1)]]  # 自由哈密顿量
+
+    def groud_state(self,x0=0.48):
+        '''
+        反幂法 求解基态波函数
+        '''
+        pass
+
+        
+    
+
+
 def Build_H(xmax,N):
     '''
     构建哈密顿矩阵
     '''
     Dx = 2*xmax/(N-1)
-    D1 = np.diag([1/Dx**2-1/np.sqrt((i*Dx)**2+2) for i in np.linspace(-xmax,xmax,N)])
+    D1 = np.diag([1/Dx**2-1/np.sqrt((i)**2+2) for i in np.linspace(-xmax,xmax,N)])
     D1 += np.diag([-1/(2*Dx**2) for i in range(N-1)],k=1)+np.diag([-1/(2*Dx**2) for i in range(N-1)],k=-1)
     return D1
     
@@ -23,10 +51,10 @@ def antipower_method(v,N,xmax,x0=0.48,e=10**(-10),Nmax=10**5):
     初始化矢量v,格点个数N,解空间xmax,初始位移x0=0.48,精度e=10**(-6),最大迭代次数Nmax=10**5
     '''
     Dx = 2*xmax/(N-1)
-    A = [[1/Dx**2-1/np.sqrt((i*Dx)**2+2)+x0 for i in np.linspace(-xmax,xmax,N)],[-1/(2*Dx**2) for i in range(N-1)]] # 已经加上位移
-    # B = np.diag(A[0])+np.diag(A[1], k=1)+np.diag(A[1], k=-1)
+    A = [[1/Dx**2-1/np.sqrt((i)**2+2)+x0 for i in np.linspace(-xmax,xmax,N)],[-1/(2*Dx**2) for i in range(N-1)]] # 已经加上位移
+    B = np.diag(A[0])+np.diag(A[1], k=1)+np.diag(A[1], k=-1)
     L = cholesky(A)
-    n =0 
+    n =0
     # u = v.copy()
     u = v[:] # 深复制
     while n < Nmax:
@@ -45,8 +73,8 @@ def antipower_method(v,N,xmax,x0=0.48,e=10**(-10),Nmax=10**5):
         n+=1
     else:
         raise("Two many loops "+str(delta))
-    # return max(B@np.asarray(v), key=lambda x: abs(x)), v # 返回的是特征值和本征矢
-    return v , a
+    return max(B@np.asarray(v), key=lambda x: abs(x)), v # 返回的是特征值和本征矢
+    # return v , a
 
 def shape(psi,xmax):
     '''
@@ -57,8 +85,6 @@ def shape(psi,xmax):
     y = abs(np.array(psi))**2
     plt.plot(x,y)
     plt.show()
-
-    
 
 
 def check(A,v,u):
@@ -81,7 +107,7 @@ def groud_state(xmax,N):
     # v = np.array([0.5 for i in range(N)])
     v = [0.5 for i in range(N)]
     # u = antipower_method(np.copy(v), N, xmax)
-    u = antipower_method(v, N, xmax)
+    u = antipower_method(v, N, xmax)[1]
     return u
 
 def multi(H,u):
@@ -103,7 +129,7 @@ def Time_evolution(psi0,xmax,N,dt = .05,T_max = 18*2*np.pi):
     Dx = 2*xmax/(N-1)
     Nt = int(T_max/dt)
     E0 = np.sqrt(10**(16-16)/3.5094448314)
-    H0 = [[1/Dx**2-1/np.sqrt((i*Dx)**2+2) for i in np.linspace(-xmax,xmax, N)], [-1/(2*Dx**2) for i in range(N-1)]]  # t=0时哈密顿量
+    H0 = [[1/Dx**2-1/np.sqrt((i)**2+2) for i in np.linspace(-xmax,xmax, N)], [-1/(2*Dx**2) for i in range(N-1)]]  # t=0时哈密顿量
     psi = deepcopy(psi0)
     sequence =[]
     # sequence.append(psi)
@@ -111,7 +137,7 @@ def Time_evolution(psi0,xmax,N,dt = .05,T_max = 18*2*np.pi):
     for t in np.linspace(0,T_max,Nt):
         print("t = "+str(t))
         t1 = t+ .5*dt
-        dH = [x*E0*(np.sin(t1/(2*18)))**2*np.sin(t1) for x in np.linspace(-xmax,xmax,N)] # 计算哈密顿量含时项
+        dH = [x*E0*np.sin(t1/(2*18))**2*np.sin(t1) for x in np.linspace(-xmax,xmax,N)] # 计算哈密顿量含时项
         H = [[H0[0][i]+dH[i] for i in range(N)],[each for each in H0[1]]]
         b = multi([[1-.5j*dt*each for each in H[0]],
                    [-.5j*dt*each for each in H[1]]], psi[:])
@@ -127,21 +153,23 @@ def Time_evolution(psi0,xmax,N,dt = .05,T_max = 18*2*np.pi):
     
 
 if __name__ == "__main__":
-    N = 20000
-    xmax=2000
+    N = 2000
+    xmax=200
     Dx = 2*xmax/(N-1)
-    T_max = 6*2*np.pi
-    dt = .2
+    T_max = 18*2*np.pi
+    dt = .1
     Nt = int(T_max/dt)
     # 第一问
-    # v =np.array([0.5 for i in range(N)])
-    # print(antipower_method(v, N, xmax,x0=.48))
+    #v =np.array([0.5 for i in range(N)])
+    #lamb,psi = antipower_method(v, N, xmax,x0=.48)
+    #print(lamb)
+    #shape(psi,xmax)
     # 第二问
-    psi = groud_state(xmax,N)[0]
+    psi = groud_state(xmax,N)
     a = np.linalg.norm(np.asarray(psi))
     psi = [each/a for each in psi]
-    # shape(psi,xmax/200)
-    # print(psi[1])
+    # # shape(psi,xmax/200)
+    # # print(psi[1])
     P = Time_evolution(psi,xmax,N,dt=dt,T_max=T_max)
     t = np.linspace(0,T_max,Nt+1)
     plt.plot(t,P)

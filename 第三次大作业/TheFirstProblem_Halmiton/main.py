@@ -32,8 +32,8 @@ class wave_function:
         '''
         pass
 
-        
-    
+
+
 
 
 def Build_H(xmax,N):
@@ -44,8 +44,8 @@ def Build_H(xmax,N):
     D1 = np.diag([1/Dx**2-1/np.sqrt((i)**2+2) for i in np.linspace(-xmax,xmax,N)])
     D1 += np.diag([-1/(2*Dx**2) for i in range(N-1)],k=1)+np.diag([-1/(2*Dx**2) for i in range(N-1)],k=-1)
     return D1
-    
-def antipower_method(v,N,xmax,x0=0.48,e=10**(-10),Nmax=10**5):
+
+def antipower_method(v,N,xmax,x0=0.5,e=10**(-10),Nmax=10**5):
     '''
     反幂法
     初始化矢量v,格点个数N,解空间xmax,初始位移x0=0.48,精度e=10**(-6),最大迭代次数Nmax=10**5
@@ -150,7 +150,7 @@ def Time_evolution(psi0,xmax,N,dt = .05,T_max = 18*2*np.pi):
         res = abs(sum([psi[i]*psi0[i].conjugate() for i in range(N)]))**2
         sequence.append(res)
     return sequence
-    
+
 
 if __name__ == "__main__":
     N = 2000
@@ -160,19 +160,18 @@ if __name__ == "__main__":
     dt = .1
     Nt = int(T_max/dt)
     # 第一问
-    #v =np.array([0.5 for i in range(N)])
-    #lamb,psi = antipower_method(v, N, xmax,x0=.48)
-    #print(lamb)
-    #shape(psi,xmax)
+    v =np.array([0.5 for i in range(N)])
+    psi, lab = antipower_method(v, N, xmax,x0=.50)
+    print(lab)
+    shape(psi,xmax)
+
     # 第二问
-    psi = groud_state(xmax,N)
-    a = np.linalg.norm(np.asarray(psi))
-    psi = [each/a for each in psi]
+    # psi = groud_state(xmax,N)[0]
+    # a = np.linalg.norm(np.asarray(psi))
+    # psi = [each/a for each in psi]
     # # shape(psi,xmax/200)
     # # print(psi[1])
-    P = Time_evolution(psi,xmax,N,dt=dt,T_max=T_max)
-    t = np.linspace(0,T_max,Nt+1)
-    plt.plot(t,P)
-    plt.show()
-
-    
+    # P = Time_evolution(psi,xmax,N,dt=dt,T_max=T_max)
+    # t = np.linspace(0,T_max,Nt+1)
+    # plt.plot(t,P)
+    # plt.show()

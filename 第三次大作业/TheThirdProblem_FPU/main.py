@@ -99,20 +99,23 @@ class phonon:
         '''
         self.dt=0.5
         t_max = T *2*np.pi/self.omega
-        intern = np.linspace(0,T,int(t_max/self.dt))
-        E = []
+        print("t_max = "+str(T))
+        intern = np.linspace(0,T,int(t_max/self.dt+1))
+        E_av = [[self.Energ(i)] for i in range(p)]
         t =[]
         j = 0
         for _ in intern:
             if j%10==0:
+                m = j/10
                 t.append(_)
-                E.append([self.Energ(i) for i in range(p)])
+                for i in range(p):
+                    E_av[i].append((m*E_av[i][-1]+self.Energ(i))/(m+1))
                 print(_)
             self.Evolve()
             j+=1
-        res = [np.array([each[i] for each in E]) for i in range(p)]
-        for i in range(len(res)):
-            plt.plot(t,res[i],label="E"+str(i))
+        # res = [np.array([each[i] for each in E]) for i in range(p)]
+        for i in range(p):
+            plt.plot(t,E_av[i],label="E"+str(i))
         plt.legend()
         plt.xlabel(r"t(2$\pi / \omega$)")
         plt.ylabel("Energy")

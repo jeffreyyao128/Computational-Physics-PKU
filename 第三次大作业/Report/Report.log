@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.99999 (TeX Live 2018/W32TeX) (preloaded format=xelatex 2018.12.24)  18 MAY 2019 14:23
+This is XeTeX, Version 3.14159265-2.6-0.99999 (TeX Live 2018/W32TeX) (preloaded format=xelatex 2018.12.24)  9 JUN 2019 14:59
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -707,26 +707,196 @@ Overfull \hbox (19.38295pt too wide) detected at line 89
 LaTeX Font Info:    Font shape `TU/SimSun(0)/m/sl' in size <10.53937> not avail
 able
 (Font)              Font shape `TU/SimSun(0)/m/it' tried instead on input line 
-98.
+114.
 
 Package Fancyhdr Warning: \headheight is too small (12.0pt): 
  Make it at least 12.64723pt.
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[2] (./Report.aux)
+[2]
+Overfull \hbox (45.26074pt too wide) in paragraph at lines 119--120
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (94.04333pt too wide) in paragraph at lines 121--122
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][][][][][][] 
+ []
+
+
+Overfull \hbox (7.31873pt too wide) in paragraph at lines 124--125
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (18.1593pt too wide) in paragraph at lines 128--129
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+[3]
+Overfull \hbox (45.26074pt too wide) in paragraph at lines 171--173
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+[4]
+Overfull \hbox (83.95496pt too wide) detected at line 198
+[][] \OT1/cmr/m/n/10.53937 = [] [][]
+ []
+
+[5]
+Overfull \hbox (23.57959pt too wide) in paragraph at lines 220--221
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (23.57959pt too wide) in paragraph at lines 225--226
+[][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (18.1593pt too wide) in paragraph at lines 226--228
+[][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (23.57959pt too wide) in paragraph at lines 235--236
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (34.42017pt too wide) in paragraph at lines 241--242
+[][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (34.42017pt too wide) in paragraph at lines 243--244
+[][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (34.42017pt too wide) in paragraph at lines 245--246
+[][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (34.42017pt too wide) in paragraph at lines 247--248
+[][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (18.1593pt too wide) in paragraph at lines 249--250
+[][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (18.1593pt too wide) in paragraph at lines 251--252
+[][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (104.88391pt too wide) in paragraph at lines 254--255
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (104.88391pt too wide) in paragraph at lines 256--257
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+[6]
+Overfull \hbox (61.5216pt too wide) in paragraph at lines 263--264
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (45.26074pt too wide) in paragraph at lines 264--265
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (294.594pt too wide) in paragraph at lines 265--266
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+File: ./fig/Prob2_3.png Graphic file (type bmp)
+<./fig/Prob2_3.png>
+File: ./fig/Prob2_4.png Graphic file (type bmp)
+<./fig/Prob2_4.png>
+File: ./fig/Prob2_2.png Graphic file (type bmp)
+<./fig/Prob2_2.png>
+[7] [8]
+File: ./fig/Prob3_1.png Graphic file (type bmp)
+<./fig/Prob3_1.png>
+ [9]
+Overfull \hbox (110.3042pt too wide) in paragraph at lines 352--353
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+[10]
+Overfull \hbox (77.78247pt too wide) in paragraph at lines 363--364
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][] 
+ []
+
+
+Overfull \hbox (77.78247pt too wide) in paragraph at lines 364--365
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][] 
+ []
+
+
+Overfull \hbox (77.78247pt too wide) in paragraph at lines 365--366
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][] 
+ []
+
+
+Overfull \hbox (77.78247pt too wide) in paragraph at lines 366--367
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][] 
+ []
+
+
+Overfull \hbox (61.5216pt too wide) in paragraph at lines 367--368
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][] 
+ []
+
+
+Overfull \hbox (61.5216pt too wide) in paragraph at lines 368--369
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][] 
+ []
+
+
+Overfull \hbox (39.84045pt too wide) in paragraph at lines 370--371
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (39.84045pt too wide) in paragraph at lines 372--373
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+File: ./fig/Prob3_2.png Graphic file (type bmp)
+<./fig/Prob3_2.png>
+File: ./fig/Prob3_4.png Graphic file (type bmp)
+<./fig/Prob3_4.png>
+[11] [12] [13] (./Report.aux)
 
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 0.41063pt have occurred.
 
  ) 
 Here is how much of TeX's memory you used:
- 19465 strings out of 492933
- 412666 string characters out of 6136536
- 670734 words of memory out of 5000000
- 23312 multiletter control sequences out of 15000+600000
- 537648 words of font info for 68 fonts, out of 8000000 for 9000
+ 19799 strings out of 492933
+ 418975 string characters out of 6136536
+ 709734 words of memory out of 5000000
+ 23617 multiletter control sequences out of 15000+600000
+ 538865 words of font info for 82 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 52i,11n,68p,804b,443s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 52i,12n,68p,804b,1867s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on Report.pdf (2 pages).
+Output written on Report.pdf (13 pages).

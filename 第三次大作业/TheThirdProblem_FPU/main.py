@@ -135,12 +135,13 @@ class phonon:
 if __name__ == "__main__":
     n = 32
     # 第二问
-    # p=phonon([4]+[0 for _ in range(n-1)],[0 for _ in range(n)],a=0.25)c
+    p=phonon([4]+[0 for _ in range(n-1)],[0 for _ in range(n)],a=0.25)
     # p.plot(160,5)
     # 第四问
+    p.plot(4000,1)
     # 第五问
-    p=phonon([20]+[0 for _ in range(n-1)],[0 for _ in range(n)],a=0.25)
-    p.dt=0.5
-    p.second_plot(2000,5)
+    # p=phonon([20]+[0 for _ in range(n-1)],[0 for _ in range(n)],a=0.25)
+    # p.dt=0.5
+    # p.second_plot(2000,1)
     
 
